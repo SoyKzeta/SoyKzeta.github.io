@@ -418,9 +418,13 @@ function AcademicProjects() {
                 <div className="flex flex-wrap gap-2 ml-7">
                   {project.tags.map((tag, i) => (
                     <PopIn key={tag} delay={i * 0.04}>
-                      <span className="px-2 py-0.5 rounded-md text-xs bg-white/5 border border-white/10 text-slate-400 group-hover:border-indigo-500/20 group-hover:text-slate-300 transition-colors duration-300 inline-block">
+                      <motion.span
+                        whileHover={{ scale: 1.08, y: -1 }}
+                        transition={{ duration: 0.15 }}
+                        className="px-2 py-0.5 rounded-md text-xs bg-white/5 border border-white/10 text-slate-400 group-hover:border-indigo-500/20 group-hover:text-slate-300 transition-colors duration-300 inline-block cursor-default"
+                      >
                         {tag}
-                      </span>
+                      </motion.span>
                     </PopIn>
                   ))}
                 </div>
@@ -430,7 +434,15 @@ function AcademicProjects() {
         </StaggerContainer>
 
         <FadeUp delay={0.1}>
-          <div className="mt-8 p-6 rounded-xl bg-white/3 border border-white/8">
+          <motion.div
+            whileHover={{
+              y: -3,
+              boxShadow: "0 8px 32px rgba(16,185,129,0.08)",
+              borderColor: "rgba(16,185,129,0.25)",
+            }}
+            transition={{ duration: 0.25 }}
+            className="mt-8 p-6 rounded-xl bg-white/3 border border-white/8 group"
+          >
             <h3 className="text-sm font-semibold text-slate-200 mb-4 flex items-center gap-2">
               <span>🧪</span> Calidad y pruebas de software
             </h3>
@@ -438,14 +450,18 @@ function AcademicProjects() {
               {["Pruebas caja negra / blanca", "Selenium", "Cypress", "TestRail", "Jira", "Azure DevOps", "Scrum", "Planes de prueba"].map(
                 (tag, i) => (
                   <PopIn key={tag} delay={i * 0.05}>
-                    <span className="px-2.5 py-1 rounded-lg text-xs bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 skill-badge inline-block">
+                    <motion.span
+                      whileHover={{ scale: 1.08, y: -1 }}
+                      transition={{ duration: 0.15 }}
+                      className="px-2.5 py-1 rounded-lg text-xs bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 inline-block cursor-default"
+                    >
                       {tag}
-                    </span>
+                    </motion.span>
                   </PopIn>
                 )
               )}
             </div>
-          </div>
+          </motion.div>
         </FadeUp>
       </div>
     </section>
