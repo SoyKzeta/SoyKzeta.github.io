@@ -397,20 +397,34 @@ function AcademicProjects() {
         <StaggerContainer className="space-y-4">
           {ACADEMIC_PROJECTS.map((project, index) => (
             <StaggerItem key={project.title}>
-              <div className="p-6 rounded-xl bg-white/3 border border-white/8">
+              <motion.div
+                whileHover={{
+                  y: -3,
+                  boxShadow: "0 8px 32px rgba(99,102,241,0.1)",
+                  borderColor: "rgba(99,102,241,0.3)",
+                }}
+                transition={{ duration: 0.25 }}
+                className="p-6 rounded-xl bg-white/3 border border-white/8 group"
+              >
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="text-xs text-slate-600 font-mono">0{index + 1}</span>
+                  <motion.span
+                    className="text-xs font-mono text-slate-600 group-hover:text-indigo-400 transition-colors duration-300"
+                  >
+                    0{index + 1}
+                  </motion.span>
                   <h3 className="text-sm font-semibold text-slate-100">{project.title}</h3>
                 </div>
                 <p className="text-xs text-slate-500 leading-relaxed ml-7 mb-4">{project.description}</p>
                 <div className="flex flex-wrap gap-2 ml-7">
-                  {project.tags.map((tag) => (
-                    <span key={tag} className="px-2 py-0.5 rounded-md text-xs bg-white/5 border border-white/10 text-slate-400">
-                      {tag}
-                    </span>
+                  {project.tags.map((tag, i) => (
+                    <PopIn key={tag} delay={i * 0.04}>
+                      <span className="px-2 py-0.5 rounded-md text-xs bg-white/5 border border-white/10 text-slate-400 group-hover:border-indigo-500/20 group-hover:text-slate-300 transition-colors duration-300 inline-block">
+                        {tag}
+                      </span>
+                    </PopIn>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </StaggerItem>
           ))}
         </StaggerContainer>
@@ -525,7 +539,7 @@ function Contact() {
           </p>
         </FadeUp>
 
-        <StaggerContainer className="grid sm:grid-cols-3 gap-4 mb-10">
+        <StaggerContainer className="grid sm:grid-cols-2 gap-4 mb-10 max-w-md mx-auto w-full">
           {[
             {
               href: "mailto:emmanuelville@hotmail.com",
