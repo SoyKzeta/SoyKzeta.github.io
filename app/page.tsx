@@ -11,7 +11,6 @@ import {
   Terminal,
   GraduationCap,
   Briefcase,
-  ArrowUpRight,
   GitFork,
   MessageCircle,
 } from "lucide-react";
@@ -398,27 +397,20 @@ function AcademicProjects() {
         <StaggerContainer className="space-y-4">
           {ACADEMIC_PROJECTS.map((project, index) => (
             <StaggerItem key={project.title}>
-              <motion.div
-                whileHover={{ y: -2, borderColor: "rgba(99,102,241,0.4)" }}
-                transition={{ duration: 0.2 }}
-                className="p-6 rounded-xl bg-white/3 border border-white/8 group cursor-default"
-              >
-                <div className="flex items-start justify-between gap-4 mb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-slate-600 font-mono w-5">0{index + 1}</span>
-                    <h3 className="text-sm font-semibold text-slate-100">{project.title}</h3>
-                  </div>
-                  <ArrowUpRight size={14} className="text-slate-600 group-hover:text-indigo-400 transition-colors shrink-0 mt-0.5" />
+              <div className="p-6 rounded-xl bg-white/3 border border-white/8">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-xs text-slate-600 font-mono">0{index + 1}</span>
+                  <h3 className="text-sm font-semibold text-slate-100">{project.title}</h3>
                 </div>
-                <p className="text-xs text-slate-500 leading-relaxed ml-8 mb-4">{project.description}</p>
-                <div className="flex flex-wrap gap-2 ml-8">
+                <p className="text-xs text-slate-500 leading-relaxed ml-7 mb-4">{project.description}</p>
+                <div className="flex flex-wrap gap-2 ml-7">
                   {project.tags.map((tag) => (
                     <span key={tag} className="px-2 py-0.5 rounded-md text-xs bg-white/5 border border-white/10 text-slate-400">
                       {tag}
                     </span>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             </StaggerItem>
           ))}
         </StaggerContainer>
