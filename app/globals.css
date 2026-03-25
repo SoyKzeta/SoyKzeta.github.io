@@ -92,3 +92,7 @@ body {
 .nav-link:hover {
   color: #a78bfa;
 }
+
+a, button {
+  cursor: none;
+}

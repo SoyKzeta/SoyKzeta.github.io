@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { CustomCursor } from "./components/cursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +29,8 @@ export default function RootLayout({
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
-      <body className="bg-[#0a0a0f] text-slate-200 min-h-screen">
+      <body className="bg-[#0a0a0f] text-slate-200 min-h-screen cursor-none">
+        <CustomCursor />
         {children}
       </body>
     </html>
