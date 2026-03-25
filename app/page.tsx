@@ -103,7 +103,7 @@ function Navbar() {
       className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-md"
     >
       <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
-        <span className="font-mono text-sm text-indigo-400 font-semibold tracking-wide">EV</span>
+        <a href="#" className="font-mono text-sm text-indigo-400 font-semibold tracking-wide hover:text-violet-400 transition-colors duration-200">EV</a>
         <div className="hidden sm:flex items-center gap-6 text-sm text-slate-400">
           {["Sobre mí", "FlowsFy", "Proyectos", "Habilidades", "Contacto"].map((item) => (
             <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`} className="nav-link hover:text-violet-400">
