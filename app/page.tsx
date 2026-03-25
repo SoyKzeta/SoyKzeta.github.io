@@ -23,7 +23,7 @@ import {
   PopIn,
   AnimatedDivider,
 } from "./components/animations";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -637,6 +637,11 @@ function SectionLabel({
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Page() {
+  useEffect(() => {
+    window.history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <main>
       <Navbar />
