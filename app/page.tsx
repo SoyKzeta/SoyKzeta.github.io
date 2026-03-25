@@ -15,7 +15,7 @@ import {
   GitFork,
   MessageCircle,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import {
   FadeUp,
   StaggerContainer,
@@ -23,6 +23,7 @@ import {
   PopIn,
   AnimatedDivider,
 } from "./components/animations";
+import { useRef } from "react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -117,8 +118,36 @@ function Navbar() {
 }
 
 function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+  const x = useSpring(rawX, { stiffness: 80, damping: 20 });
+  const y = useSpring(rawY, { stiffness: 80, damping: 20 });
+
+  function handleMouseMove(e: React.MouseEvent<HTMLElement>) {
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    rawX.set(e.clientX - rect.left);
+    rawY.set(e.clientY - rect.top);
+  }
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center hero-glow px-6 pt-14">
+    <section
+      ref={sectionRef}
+      onMouseMove={handleMouseMove}
+      className="relative min-h-screen flex items-center justify-center hero-glow px-6 pt-14 overflow-hidden"
+    >
+      {/* Mouse glow */}
+      <motion.div
+        className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full"
+        style={{
+          left: x,
+          top: y,
+          background: "radial-gradient(circle, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.06) 40%, transparent 70%)",
+        }}
+      />
+
       <div
         className="absolute inset-0 opacity-[0.03]"
         style={{
