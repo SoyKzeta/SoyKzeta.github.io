@@ -193,7 +193,7 @@ function Hero() {
 
         <div className="flex items-center justify-center gap-4 flex-wrap">
           <a
-            href="https://linkedin.com/in/emmanuel-villegas-urrea"
+            href="https://www.linkedin.com/in/villegas-emmanuel31/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-all duration-200 hover:shadow-lg hover:shadow-indigo-500/25"
@@ -204,7 +204,7 @@ function Hero() {
             LinkedIn
           </a>
           <a
-            href="https://github.com/EmmanuelVillegas"
+            href="https://github.com/SoyKzeta"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 text-sm font-medium transition-all duration-200"
@@ -609,7 +609,7 @@ function Contact() {
 
         <div className="flex items-center justify-center gap-4">
           <a
-            href="https://linkedin.com/in/emmanuel-villegas-urrea"
+            href="https://www.linkedin.com/in/villegas-emmanuel31/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-all duration-200"
