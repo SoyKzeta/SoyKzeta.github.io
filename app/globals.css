@@ -56,6 +56,13 @@ body {
   animation: gradient-shift 5s ease infinite;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .hero-intro-line {
+    opacity: 0;
+    transform: translate3d(0, 1.75rem, 0);
+  }
+}
+
 .card-hover {
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
@@ -93,3 +100,23 @@ body {
   color: #a78bfa;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto;
+  }
+
+  .gradient-text {
+    animation: none;
+    background-position: 0% 50%;
+  }
+
+  .hero-intro-line {
+    opacity: 1;
+    transform: none;
+  }
+}

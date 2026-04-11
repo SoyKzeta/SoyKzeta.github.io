@@ -1,7 +1,10 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
+
+/** Cubic-bezier alineado con ease-out refinado (Framer / CSS). */
+export const easeOutRefined: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 // Fade + slide up al entrar en viewport
 export function FadeUp({
@@ -15,13 +18,19 @@ export function FadeUp({
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
+  const prefersReducedMotion = useReducedMotion();
+  const visible = prefersReducedMotion || inView;
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 32 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
+      animate={visible ? { opacity: 1, y: 0 } : {}}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : { duration: 0.6, delay, ease: easeOutRefined }
+      }
       className={className}
     >
       {children}
@@ -41,16 +50,21 @@ export function StaggerContainer({
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
+  const prefersReducedMotion = useReducedMotion();
+  const visible = prefersReducedMotion || inView;
 
   return (
     <motion.div
       ref={ref}
       initial="hidden"
-      animate={inView ? "show" : "hidden"}
+      animate={visible ? "show" : "hidden"}
       variants={{
         hidden: {},
         show: {
-          transition: { staggerChildren: 0.1, delayChildren: delay },
+          transition: {
+            staggerChildren: prefersReducedMotion ? 0 : 0.1,
+            delayChildren: prefersReducedMotion ? 0 : delay,
+          },
         },
       }}
       className={className}
@@ -68,11 +82,22 @@ export function StaggerItem({
   children: React.ReactNode;
   className?: string;
 }) {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 24 },
-        show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+        hidden: prefersReducedMotion
+          ? { opacity: 1, y: 0 }
+          : { opacity: 0, y: 24 },
+        show: {
+          opacity: 1,
+          y: 0,
+          transition: {
+            duration: prefersReducedMotion ? 0 : 0.5,
+            ease: easeOutRefined,
+          },
+        },
       }}
       className={className}
     >
@@ -93,13 +118,19 @@ export function PopIn({
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
+  const prefersReducedMotion = useReducedMotion();
+  const visible = prefersReducedMotion || inView;
 
   return (
     <motion.span
       ref={ref}
-      initial={{ opacity: 0, scale: 0.75 }}
-      animate={inView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ duration: 0.35, delay, ease: [0.34, 1.56, 0.64, 1] }}
+      initial={prefersReducedMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.75 }}
+      animate={visible ? { opacity: 1, scale: 1 } : {}}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : { duration: 0.35, delay, ease: easeOutRefined }
+      }
       className={className}
     >
       {children}
@@ -111,13 +142,19 @@ export function PopIn({
 export function AnimatedDivider() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
+  const prefersReducedMotion = useReducedMotion();
+  const visible = prefersReducedMotion || inView;
 
   return (
     <motion.div
       ref={ref}
-      initial={{ scaleX: 0 }}
-      animate={inView ? { scaleX: 1 } : {}}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      initial={prefersReducedMotion ? { scaleX: 1 } : { scaleX: 0 }}
+      animate={visible ? { scaleX: 1 } : {}}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : { duration: 0.8, ease: easeOutRefined }
+      }
       style={{ originX: 0 }}
       className="section-divider"
     />

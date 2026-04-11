@@ -14,15 +14,31 @@ import {
   GitFork,
   MessageCircle,
   Download,
+  Gem,
+  ExternalLink,
 } from "lucide-react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(useGSAP);
+import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
 import {
   FadeUp,
   StaggerContainer,
   StaggerItem,
   PopIn,
   AnimatedDivider,
+  easeOutRefined,
 } from "./components/animations";
+import { NavScrollProgress } from "./components/nav-scroll-progress";
+import {
+  cardLiftAcademicProps,
+  cardLiftEmeraldProps,
+  cardLiftIndigoProps,
+  contactCardLiftProps,
+  linkTapProps,
+  tagPopProps,
+} from "./lib/motion-interaction";
 import { useRef, useEffect } from "react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -96,17 +112,24 @@ const ACADEMIC_PROJECTS = [
 // ─── Components ───────────────────────────────────────────────────────────────
 
 function Navbar() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <motion.nav
-      initial={{ opacity: 0, y: -16 }}
+      initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-md"
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : { duration: 0.5, ease: easeOutRefined }
+      }
+      className="relative z-50 w-full border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-md"
     >
+      <NavScrollProgress disabled={prefersReducedMotion === true} />
       <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
         <a href="#" className="font-mono text-sm text-indigo-400 font-semibold tracking-wide hover:text-violet-400 transition-colors duration-200">EV</a>
         <div className="hidden sm:flex items-center gap-6 text-sm text-slate-400">
-          {["Sobre mí", "FlowsFy", "Proyectos", "Habilidades", "Contacto"].map((item) => (
+          {["Sobre mí", "FlowsFy", "ViveStone", "Proyectos", "Habilidades", "Contacto"].map((item) => (
             <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`} className="nav-link hover:text-violet-400">
               {item}
             </a>
@@ -119,6 +142,8 @@ function Navbar() {
 
 function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
@@ -132,21 +157,61 @@ function Hero() {
     rawY.set(e.clientY - rect.top);
   }
 
+  // GSAP posee la entrada de .hero-intro-line; el brillo del cursor sigue en Framer (mismo Hero, otro nodo).
+  useGSAP(
+    () => {
+      const root = heroContentRef.current;
+      if (!root) return;
+      const q = gsap.utils.selector(root);
+      const lines = q(".hero-intro-line");
+      if (!lines.length) return;
+
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(lines, { opacity: 1, y: 0, clearProps: "all" });
+      });
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.fromTo(
+          lines,
+          { opacity: 0, y: 28 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.62,
+            stagger: 0.09,
+            ease: "power3.out",
+            clearProps: "transform",
+          }
+        );
+      });
+
+      return () => {
+        mm.revert();
+      };
+    },
+    { scope: heroContentRef, dependencies: [] }
+  );
+
+  const tap = linkTapProps(prefersReducedMotion);
+
   return (
     <section
       ref={sectionRef}
-      onMouseMove={handleMouseMove}
-      className="relative min-h-screen flex items-center justify-center hero-glow px-6 pt-14 overflow-hidden"
+      onMouseMove={prefersReducedMotion ? undefined : handleMouseMove}
+      className="relative min-h-screen flex items-center justify-center hero-glow px-6 py-12 sm:py-16 overflow-hidden"
     >
-      {/* Mouse glow */}
-      <motion.div
-        className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full"
-        style={{
-          left: x,
-          top: y,
-          background: "radial-gradient(circle, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.06) 40%, transparent 70%)",
-        }}
-      />
+      {!prefersReducedMotion && (
+        <motion.div
+          className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full"
+          style={{
+            left: x,
+            top: y,
+            background: "radial-gradient(circle, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.06) 40%, transparent 70%)",
+          }}
+        />
+      )}
 
       <div
         className="absolute inset-0 opacity-[0.03]"
@@ -157,105 +222,69 @@ function Hero() {
         }}
       />
 
-      <div className="relative max-w-3xl mx-auto text-center">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-medium mb-8"
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-          Disponible para oportunidades
-        </motion.div>
-
-        {/* Name */}
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="text-5xl sm:text-7xl font-bold tracking-tight mb-4 text-white"
-        >
+      <div ref={heroContentRef} className="relative max-w-3xl mx-auto text-center">
+        <h1 className="hero-intro-line text-5xl sm:text-7xl font-bold tracking-tight mb-4 text-white">
           Emmanuel
           <br />
           <span className="gradient-text">Villegas Urrea</span>
-        </motion.h1>
+        </h1>
 
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-xl sm:text-2xl text-slate-400 mb-3 font-light"
-        >
+        <p className="hero-intro-line text-xl sm:text-2xl text-slate-400 mb-3 font-light">
           Desarrollador Full-Stack
-        </motion.p>
+        </p>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.55 }}
-          className="text-base text-slate-500 mb-8"
-        >
+        <p className="hero-intro-line text-base text-slate-500 mb-8">
           Fundador de <span className="text-violet-400 font-medium">FlowsFy</span> · Ingeniería de Software · Semestre 7
-        </motion.p>
+        </p>
 
-        {/* Location */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.65 }}
-          className="flex items-center justify-center gap-2 text-slate-500 text-sm mb-10"
-        >
+        <div className="hero-intro-line flex items-center justify-center gap-2 text-slate-500 text-sm mb-10">
           <MapPin size={14} />
           <span>Medellín, Colombia</span>
-        </motion.div>
+        </div>
 
-        {/* Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.75 }}
-          className="flex items-center justify-center gap-4 flex-wrap"
-        >
-          <a
+        <div className="hero-intro-line flex items-center justify-center gap-4 flex-wrap">
+          <motion.a
             href="https://www.linkedin.com/in/villegas-emmanuel31/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-all duration-200 hover:shadow-lg hover:shadow-indigo-500/25 hover:scale-105 active:scale-95"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors duration-200 hover:shadow-lg hover:shadow-indigo-500/25"
+            {...tap}
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
             </svg>
             LinkedIn
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             href="https://github.com/SoyKzeta"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 text-sm font-medium transition-all duration-200 hover:scale-105 active:scale-95"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 text-sm font-medium transition-colors duration-200"
+            {...tap}
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
               <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
             </svg>
             GitHub
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             href="mailto:emmanuelville@hotmail.com"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 text-sm font-medium transition-all duration-200 hover:scale-105 active:scale-95"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 text-sm font-medium transition-colors duration-200"
+            {...tap}
           >
             <Mail size={16} />
             Contactar
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             href="/cv/Emmanuel_Villegas_CV.pdf"
             download
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 text-sm font-medium transition-all duration-200 hover:scale-105 active:scale-95"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 text-sm font-medium transition-colors duration-200"
+            {...tap}
           >
             <Download size={16} />
             Descargar CV
-          </a>
-        </motion.div>
+          </motion.a>
+        </div>
       </div>
     </section>
   );
@@ -289,6 +318,13 @@ function AboutMe() {
               Cuento con experiencia práctica en arquitectura de software, APIs REST, integraciones con servicios externos (Meta WhatsApp Cloud API, Anthropic Claude, Wompi, Resend) y sistemas asíncronos con colas de mensajes (BullMQ + Redis). Me caracterizo por pensamiento orientado al producto, capacidad para tomar decisiones técnicas de arquitectura y un enfoque en construir soluciones escalables, mantenibles y de impacto real.
             </p>
           </StaggerItem>
+          <StaggerItem>
+            <p>
+              También desarrollé de punta a punta el sitio web de{" "}
+              <span className="text-slate-200 font-medium">ViveStone</span>{" "}
+              (cuarzos y sinterizados premium), con catálogo, galería, base de datos, APIs propias e integraciones con servicios externos para el flujo de contacto y cotización.
+            </p>
+          </StaggerItem>
         </StaggerContainer>
 
         <StaggerContainer className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-4" delay={0.2}>
@@ -311,6 +347,7 @@ function AboutMe() {
 }
 
 function FlowsFy() {
+  const prefersReducedMotion = useReducedMotion();
   const stack = {
     Backend: ["Node.js", "Express", "TypeScript", "Prisma ORM", "BullMQ", "Redis"],
     Frontend: ["Next.js 14", "Tailwind CSS", "shadcn/ui"],
@@ -353,9 +390,8 @@ function FlowsFy() {
           {features.map((f) => (
             <StaggerItem key={f.title}>
               <motion.div
-                whileHover={{ y: -3, boxShadow: "0 8px 32px rgba(99,102,241,0.12)" }}
-                transition={{ duration: 0.2 }}
                 className="p-5 rounded-xl bg-white/3 border border-white/8 h-full"
+                {...cardLiftIndigoProps(prefersReducedMotion)}
               >
                 <div className="text-2xl mb-3">{f.icon}</div>
                 <h3 className="text-sm font-semibold text-slate-100 mb-1">{f.title}</h3>
@@ -394,7 +430,143 @@ function FlowsFy() {
   );
 }
 
+function ViveStone() {
+  const prefersReducedMotion = useReducedMotion();
+  const stack: Record<string, string[]> = {
+    Frontend: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+    "Backend y datos": ["API Routes (REST)", "Base de datos", "Persistencia de leads / contenido"],
+    Integraciones: ["APIs de terceros", "Correo y notificaciones", "Webhooks"],
+    Producto: ["Catálogo filtrable", "Galería", "Formularios", "SEO"],
+  };
+
+  const features = [
+    {
+      icon: "📋",
+      title: "Catálogo y filtros",
+      desc: "Navegación por cuarzos y sinterizados premium con agrupación clara para que arquitectos y clientes encuentren la referencia adecuada.",
+    },
+    {
+      icon: "🖼️",
+      title: "Galería de proyectos",
+      desc: "Showcase visual de instalaciones reales para generar confianza y mostrar el resultado del material en espacios.",
+    },
+    {
+      icon: "📬",
+      title: "Contacto y cotización",
+      desc: "Formularios conectados a APIs en el servidor, persistencia en base de datos e integraciones (correo, notificaciones) para dar seguimiento a cotizaciones.",
+    },
+    {
+      icon: "🚚",
+      title: "Alcance nacional",
+      desc: "Mensaje claro de cobertura en Medellín, Área Metropolitana y despachos a nivel Colombia.",
+    },
+    {
+      icon: "🔌",
+      title: "APIs e integraciones",
+      desc: "Lógica en servidor con APIs REST, base de datos e integraciones con proveedores externos para correo, métricas u otros flujos del negocio.",
+    },
+    {
+      icon: "✅",
+      title: "Propuesta de valor",
+      desc: "Bloques que comunican calidad certificada, variedad de referencias y acompañamiento en la elección del material.",
+    },
+    {
+      icon: "💎",
+      title: "Identidad premium",
+      desc: "Landing orientada a conversión con tono profesional acorde a superficies de alta gama.",
+    },
+  ];
+
+  return (
+    <section id="vivestone" className="py-24 px-6">
+      <div className="max-w-3xl mx-auto">
+        <FadeUp>
+          <SectionLabel icon={<Gem size={14} />} label="Sitio comercial" />
+          <div className="flex items-start justify-between flex-wrap gap-4 mb-4">
+            <h2 className="text-3xl font-bold text-white">
+              ViveStone
+              <span className="ml-3 text-base font-normal text-slate-500">2025</span>
+            </h2>
+            <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-500/10 border border-green-500/20 text-green-400">
+              En producción
+            </span>
+          </div>
+          <p className="text-slate-400 leading-relaxed mb-6 text-[15px]">
+            Sitio corporativo para{" "}
+            <a
+              href="https://www.vivestonesas.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-violet-400 font-medium hover:text-violet-300 underline decoration-violet-500/40 underline-offset-2"
+            >
+              vivestonesas.com
+            </a>
+            : distribuidores de cuarzos y sinterizados premium en Itagüí y cobertura en Medellín, el Área Metropolitana y Colombia.
+            Desarrollo full-stack con Next.js: interfaz, capa de APIs, base de datos, integraciones con servicios externos y despliegue en producción.
+          </p>
+        </FadeUp>
+
+        <StaggerContainer className="grid sm:grid-cols-2 gap-4 mb-10">
+          {features.map((f) => (
+            <StaggerItem key={f.title}>
+              <motion.div
+                className="p-5 rounded-xl bg-white/3 border border-white/8 h-full"
+                {...cardLiftIndigoProps(prefersReducedMotion)}
+              >
+                <div className="text-2xl mb-3">{f.icon}</div>
+                <h3 className="text-sm font-semibold text-slate-100 mb-1">{f.title}</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">{f.desc}</p>
+              </motion.div>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
+
+        <FadeUp delay={0.15}>
+          <div className="mb-10">
+            <motion.a
+              href="https://www.vivestonesas.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors duration-200 hover:shadow-lg hover:shadow-indigo-500/25"
+              {...linkTapProps(prefersReducedMotion)}
+            >
+              <ExternalLink size={16} />
+              Visitar sitio
+            </motion.a>
+          </div>
+        </FadeUp>
+
+        <FadeUp delay={0.2}>
+          <div className="rounded-2xl bg-white/3 border border-white/8 p-6">
+            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5">
+              Stack tecnológico
+            </h3>
+            <div className="space-y-4">
+              {Object.entries(stack).map(([category, items]) => (
+                <div key={category} className="flex flex-wrap items-start gap-2">
+                  <span className="w-28 text-xs text-slate-500 pt-1 shrink-0">{category}</span>
+                  <div className="flex flex-wrap gap-2">
+                    {items.map((item, i) => (
+                      <PopIn key={item} delay={i * 0.05}>
+                        <span className="px-2.5 py-1 rounded-lg text-xs bg-violet-500/10 border border-violet-500/20 text-violet-300 skill-badge inline-block">
+                          {item}
+                        </span>
+                      </PopIn>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </FadeUp>
+      </div>
+    </section>
+  );
+}
+
 function AcademicProjects() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <section id="proyectos" className="py-24 px-6">
       <div className="max-w-3xl mx-auto">
@@ -407,20 +579,13 @@ function AcademicProjects() {
           {ACADEMIC_PROJECTS.map((project, index) => (
             <StaggerItem key={project.title}>
               <motion.div
-                whileHover={{
-                  y: -3,
-                  boxShadow: "0 8px 32px rgba(99,102,241,0.1)",
-                  borderColor: "rgba(99,102,241,0.3)",
-                }}
-                transition={{ duration: 0.25 }}
                 className="p-6 rounded-xl bg-white/3 border border-white/8 group"
+                {...cardLiftAcademicProps(prefersReducedMotion)}
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <motion.span
-                    className="text-xs font-mono text-slate-600 group-hover:text-indigo-400 transition-colors duration-300"
-                  >
+                  <span className="text-xs font-mono text-slate-600 group-hover:text-indigo-400 transition-colors duration-300">
                     0{index + 1}
-                  </motion.span>
+                  </span>
                   <h3 className="text-sm font-semibold text-slate-100">{project.title}</h3>
                 </div>
                 <p className="text-xs text-slate-500 leading-relaxed ml-7 mb-4">{project.description}</p>
@@ -428,9 +593,8 @@ function AcademicProjects() {
                   {project.tags.map((tag, i) => (
                     <PopIn key={tag} delay={i * 0.04}>
                       <motion.span
-                        whileHover={{ scale: 1.08, y: -1 }}
-                        transition={{ duration: 0.15 }}
                         className="px-2 py-0.5 rounded-md text-xs bg-white/5 border border-white/10 text-slate-400 group-hover:border-indigo-500/20 group-hover:text-slate-300 transition-colors duration-300 inline-block cursor-default"
+                        {...tagPopProps(prefersReducedMotion)}
                       >
                         {tag}
                       </motion.span>
@@ -444,13 +608,8 @@ function AcademicProjects() {
 
         <FadeUp delay={0.1}>
           <motion.div
-            whileHover={{
-              y: -3,
-              boxShadow: "0 8px 32px rgba(16,185,129,0.08)",
-              borderColor: "rgba(16,185,129,0.25)",
-            }}
-            transition={{ duration: 0.25 }}
             className="mt-8 p-6 rounded-xl bg-white/3 border border-white/8 group"
+            {...cardLiftEmeraldProps(prefersReducedMotion)}
           >
             <h3 className="text-sm font-semibold text-slate-200 mb-4 flex items-center gap-2">
               <span>🧪</span> Calidad y pruebas de software
@@ -460,9 +619,8 @@ function AcademicProjects() {
                 (tag, i) => (
                   <PopIn key={tag} delay={i * 0.05}>
                     <motion.span
-                      whileHover={{ scale: 1.08, y: -1 }}
-                      transition={{ duration: 0.15 }}
                       className="px-2.5 py-1 rounded-lg text-xs bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 inline-block cursor-default"
+                      {...tagPopProps(prefersReducedMotion)}
                     >
                       {tag}
                     </motion.span>
@@ -553,6 +711,8 @@ function Skills() {
 }
 
 function Contact() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <section id="contacto" className="py-24 px-6">
       <div className="max-w-3xl mx-auto text-center">
@@ -582,10 +742,7 @@ function Contact() {
             },
           ].map((item) => (
             <StaggerItem key={item.label}>
-              <motion.div
-                whileHover={{ y: -3 }}
-                transition={{ duration: 0.2 }}
-              >
+              <motion.div {...contactCardLiftProps(prefersReducedMotion)}>
                 {item.href ? (
                   <a href={item.href} className="flex flex-col items-center gap-3 p-6 rounded-xl bg-white/3 border border-white/8 card-hover block">
                     <div className={`p-3 rounded-xl border ${item.color}`}>{item.icon}</div>
@@ -610,24 +767,26 @@ function Contact() {
 
         <FadeUp delay={0.2}>
           <div className="flex items-center justify-center gap-4">
-            <a
+            <motion.a
               href="https://www.linkedin.com/in/villegas-emmanuel31/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-all duration-200 hover:scale-105 active:scale-95"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors duration-200 hover:shadow-lg hover:shadow-indigo-500/25"
+              {...linkTapProps(prefersReducedMotion)}
             >
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
               </svg>
               LinkedIn
-            </a>
-            <a
+            </motion.a>
+            <motion.a
               href="mailto:emmanuelville@hotmail.com"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 text-sm font-medium transition-all duration-200 hover:scale-105 active:scale-95"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 text-sm font-medium transition-colors duration-200"
+              {...linkTapProps(prefersReducedMotion)}
             >
               <Mail size={15} />
               Enviar email
-            </a>
+            </motion.a>
           </div>
         </FadeUp>
       </div>
@@ -636,14 +795,17 @@ function Contact() {
 }
 
 function Footer() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <motion.footer
-      initial={{ opacity: 0 }}
+      initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
+      transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.45, ease: easeOutRefined }}
       className="border-t border-white/5 py-8 px-6 text-center"
     >
-      <p className="text-xs text-slate-600">© 2025 Emmanuel Villegas Urrea · Medellín, Colombia</p>
+      <p className="text-xs text-slate-600">© 2026 Emmanuel Villegas Urrea · Medellín, Colombia</p>
     </motion.footer>
   );
 }
@@ -681,6 +843,8 @@ export default function Page() {
       <AboutMe />
       <AnimatedDivider />
       <FlowsFy />
+      <AnimatedDivider />
+      <ViveStone />
       <AnimatedDivider />
       <AcademicProjects />
       <AnimatedDivider />
