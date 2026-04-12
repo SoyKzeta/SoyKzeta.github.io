@@ -1,65 +1,59 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger);
 
 type Props = {
-  /** true = usuario con prefers-reduced-motion (no ScrollTrigger) */
+  /** true = usuario con prefers-reduced-motion (sin barra de progreso) */
   disabled: boolean;
 };
 
 /**
  * Barra fina de progreso de scroll bajo el navbar.
+ * Actualiza con scroll/resize (sin ScrollTrigger) para no tocar el scroller global del documento.
  */
 export function NavScrollProgress({ disabled }: Props) {
   const barRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const bar = barRef.current;
-      if (!bar) return;
+  useEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return;
 
-      if (disabled) {
-        gsap.set(bar, { scaleX: 0, visibility: "hidden" });
-        return;
-      }
+    if (disabled) {
+      gsap.set(bar, { scaleX: 0, visibility: "hidden" });
+      return;
+    }
 
-      gsap.set(bar, { scaleX: 0, transformOrigin: "0% 50%", visibility: "visible" });
+    gsap.set(bar, { scaleX: 0, transformOrigin: "0% 50%", visibility: "visible" });
 
-      const tween = gsap.to(bar, {
-        scaleX: 1,
-        ease: "none",
-        scrollTrigger: {
-          trigger: document.documentElement,
-          start: "top top",
-          end: "max max",
-          scrub: 0.25,
-          invalidateOnRefresh: true,
-        },
-      });
+    let rafId = 0;
 
-      const refresh = () => {
-        ScrollTrigger.refresh();
-      };
+    const update = () => {
+      rafId = 0;
+      const doc = document.documentElement;
+      const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
+      const p = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+      gsap.set(bar, { scaleX: p });
+    };
 
-      window.addEventListener("resize", refresh);
-      const onLoad = () => refresh();
-      window.addEventListener("load", onLoad);
-      void document.fonts?.ready?.then(refresh).catch(() => refresh());
+    const scheduleUpdate = () => {
+      if (!rafId) rafId = requestAnimationFrame(update);
+    };
 
-      return () => {
-        window.removeEventListener("resize", refresh);
-        window.removeEventListener("load", onLoad);
-        tween.scrollTrigger?.kill();
-        tween.kill();
-      };
-    },
-    { scope: barRef, dependencies: [disabled] }
-  );
+    update();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    const onLoad = () => update();
+    window.addEventListener("load", onLoad);
+    void document.fonts?.ready?.then(update).catch(() => update());
+
+    return () => {
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", update);
+      window.removeEventListener("load", onLoad);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [disabled]);
 
   return (
     <div

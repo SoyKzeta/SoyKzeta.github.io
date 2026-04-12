@@ -115,16 +115,7 @@ function Navbar() {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <motion.nav
-      initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: -16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={
-        prefersReducedMotion
-          ? { duration: 0 }
-          : { duration: 0.5, ease: easeOutRefined }
-      }
-      className="relative z-50 w-full border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-md"
-    >
+    <nav className="sticky top-0 z-50 w-full border-b border-white/5 bg-[#0a0a0f]/90 backdrop-blur-md supports-[backdrop-filter]:bg-[#0a0a0f]/75">
       <NavScrollProgress disabled={prefersReducedMotion === true} />
       <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
         <a href="#" className="font-mono text-sm text-indigo-400 font-semibold tracking-wide hover:text-violet-400 transition-colors duration-200">EV</a>
@@ -136,7 +127,7 @@ function Navbar() {
           ))}
         </div>
       </div>
-    </motion.nav>
+    </nav>
   );
 }
 
@@ -373,15 +364,15 @@ function FlowsFy() {
           <div className="flex items-start justify-between flex-wrap gap-4 mb-4">
             <h2 className="text-3xl font-bold text-white">
               FlowsFy
-              <span className="ml-3 text-base font-normal text-slate-500">2024 – presente</span>
+              <span className="ml-3 text-base font-normal text-slate-500">2026</span>
             </h2>
-            <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-500/10 border border-green-500/20 text-green-400">
-              En producción
+            <span className="px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 border border-amber-500/25 text-amber-300">
+              En desarrollo
             </span>
           </div>
           <p className="text-slate-400 leading-relaxed mb-10 text-[15px]">
             Plataforma SaaS con IA para tiendas físicas. Diseño y desarrollo completo desde cero como{" "}
-            <span className="text-slate-200 font-medium">único desarrollador</span>: arquitectura, base de datos, backend, frontend y despliegue en producción.
+            <span className="text-slate-200 font-medium">único desarrollador</span>: arquitectura, base de datos, backend, frontend y entornos de desarrollo y despliegue iterativo (2026).
           </p>
         </FadeUp>
 

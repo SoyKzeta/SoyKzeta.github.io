@@ -3,6 +3,12 @@
 :root {
   --background: #0a0a0f;
   --foreground: #e2e8f0;
+  /* Altura aprox. del navbar (h-14 + borde) para anclas con menú sticky */
+  --nav-offset: 3.75rem;
+}
+
+html {
+  scroll-padding-top: var(--nav-offset);
 }
 
 @theme inline {
