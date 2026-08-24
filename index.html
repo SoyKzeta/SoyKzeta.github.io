@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root { --accent:#8b5cf6; --accent-deep:#7c3aed; --cyan:#06b6d4; --glow:0.22; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin:0; background:#09090b; color:#e5e7eb; font-family:'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+a { color:#c4b5fd; text-decoration:none; }
+a:hover { color:#a78bfa; }
+::selection { background:rgba(139,92,246,0.35); }
+@keyframes pulseDot { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.35; transform:scale(0.72); } }
+@keyframes ringPulse { 0% { box-shadow:0 0 0 0 rgba(139,92,246,0.35); } 70% { box-shadow:0 0 0 10px rgba(139,92,246,0); } 100% { box-shadow:0 0 0 0 rgba(139,92,246,0); } }
+@keyframes gridDrift { 0% { transform:translateY(0); } 100% { transform:translateY(56px); } }
+@keyframes caret { 0%,49% { opacity:1; } 50%,100% { opacity:0; } }
+</style>
+</helmet>
+
+<div style="position:relative; min-height:100vh; overflow-x:hidden; background:#09090b;">
+
+  <div style="position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;">
+    <div id="gridLayer" style="position:absolute; inset:-60px; background-image:linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px); background-size:56px 56px; animation:gridDrift 14s linear infinite; mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 75%); -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 75%);"></div>
+    <div style="position:absolute; top:-320px; left:50%; transform:translateX(-50%); width:1100px; height:700px; background:radial-gradient(ellipse at center, rgba(124,58,237,0.28), transparent 65%); filter:blur(20px);"></div>
+    <div style="position:absolute; top:38%; right:-260px; width:720px; height:720px; background:radial-gradient(circle at center, rgba(6,182,212,0.14), transparent 62%); filter:blur(24px);"></div>
+    <div style="position:absolute; bottom:-200px; left:-200px; width:760px; height:600px; background:radial-gradient(circle at center, rgba(139,92,246,0.14), transparent 65%); filter:blur(24px);"></div>
+  </div>
+
+  <header style="position:fixed; top:18px; left:0; right:0; z-index:50; display:flex; justify-content:center; padding:0 16px;">
+    <nav style="display:flex; align-items:center; gap:clamp(10px,2vw,26px); flex-wrap:wrap; justify-content:center; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.1); border-radius:999px; padding:10px 14px 10px 18px; box-shadow:0 12px 40px rgba(0,0,0,0.55);">
+      <a href="#top" style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:16px; letter-spacing:0.04em; color:#fafafa; display:flex; align-items:center; gap:8px; transition:all .3s ease;" style-hover="color:#ffffff; text-shadow:0 0 18px rgba(139,92,246,0.95), 0 0 34px rgba(6,182,212,0.5);">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:8px; border:1px solid rgba(139,92,246,0.5); background:linear-gradient(140deg, rgba(139,92,246,0.3), rgba(6,182,212,0.14)); font-size:11px;">EV</span>
+        SoyKzeta
+      </a>
+      <span style="width:1px; height:20px; background:rgba(255,255,255,0.12);"></span>
+      <div style="display:flex; align-items:center; gap:2px; flex-wrap:wrap; justify-content:center;">
+        <a href="#sobre-mi" style="font-size:13.5px; color:#a1a1aa; padding:7px 11px; border-radius:999px; transition:all .25s ease;" style-hover="color:#f4f4f5; background:rgba(255,255,255,0.06);">Sobre mí</a>
+        <a href="#proyectos" style="font-size:13.5px; color:#a1a1aa; padding:7px 11px; border-radius:999px; transition:all .25s ease;" style-hover="color:#f4f4f5; background:rgba(255,255,255,0.06);">Proyectos</a>
+        <a href="#ciberseguridad" style="font-size:13.5px; color:#a1a1aa; padding:7px 11px; border-radius:999px; transition:all .25s ease;" style-hover="color:#f4f4f5; background:rgba(255,255,255,0.06);">Ciberseguridad</a>
+        <a href="#habilidades" style="font-size:13.5px; color:#a1a1aa; padding:7px 11px; border-radius:999px; transition:all .25s ease;" style-hover="color:#f4f4f5; background:rgba(255,255,255,0.06);">Habilidades</a>
+        <a href="#contacto" style="font-size:13.5px; color:#a1a1aa; padding:7px 11px; border-radius:999px; transition:all .25s ease;" style-hover="color:#f4f4f5; background:rgba(255,255,255,0.06);">Contacto</a>
+      </div>
+      <div id="langToggle" role="group" aria-label="Idioma / Language" style="display:inline-flex; align-items:center; gap:2px; padding:3px; border-radius:999px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04);">
+        <button type="button" data-lang="es" style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:0.04em; color:#f5f3ff; background:linear-gradient(135deg, var(--accent-deep), var(--accent)); border:0; padding:6px 11px; border-radius:999px; cursor:pointer; transition:all .25s ease;">ES</button>
+        <button type="button" data-lang="en" style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:0.04em; color:#a1a1aa; background:transparent; border:0; padding:6px 11px; border-radius:999px; cursor:pointer; transition:all .25s ease;">EN</button>
+      </div>
+      <a href="./Emmanuel_Villegas_CV.pdf" download="Emmanuel_Villegas_CV.pdf" style="font-size:13px; font-weight:600; color:#f5f3ff; background:linear-gradient(135deg, var(--accent-deep), var(--accent)); border:1px solid rgba(196,181,253,0.35); padding:9px 16px; border-radius:999px; transition:all .3s ease; box-shadow:0 0 18px rgba(139,92,246,0.28);" style-hover="box-shadow:0 0 30px rgba(139,92,246,0.6); transform:translateY(-1px);">Descargar CV</a>
+    </nav>
+  </header>
+
+  <main id="top" style="position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:clamp(120px,16vh,180px) clamp(18px,4vw,32px) 0;">
+
+    <section style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:26px; padding:clamp(24px,6vh,64px) 0 clamp(40px,8vh,80px);">
+      <div data-reveal="" style="display:inline-flex; align-items:center; gap:10px; padding:7px 16px 7px 12px; border-radius:999px; border:1px solid rgba(139,92,246,0.35); background:rgba(139,92,246,0.08); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); animation:ringPulse 3.2s ease-out infinite;">
+        <span style="width:7px; height:7px; border-radius:50%; background:#a78bfa; box-shadow:0 0 10px #8b5cf6; animation:pulseDot 1.8s ease-in-out infinite;"></span>
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.06em; color:#d4d4d8; text-transform:uppercase;">Disponible para roles remotos y desarrollo de software de alto impacto</span>
+      </div>
+
+      <h1 data-reveal="" style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(38px,6.4vw,76px); line-height:1.03; letter-spacing:-0.03em; margin:0; max-width:16ch; text-wrap:balance; color:#fafafa;">
+        Emmanuel Villegas <span style="color:#71717a; font-weight:400;">—</span> <span style="background:linear-gradient(105deg,#ffffff 10%, #c4b5fd 45%, #22d3ee 95%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;">Ingeniero Full-Stack &amp; Fundador de SaaS</span>
+      </h1>
+
+      <p data-reveal="" style="max-width:70ch; margin:0; font-size:clamp(15px,1.45vw,18.5px); line-height:1.7; color:#a1a1aa; font-weight:300; text-wrap:pretty;">
+        Especialista en arquitectura de software escalable, interfaces 3D/WebGL inmersivas, integraciones de IA (Anthropic Claude), APIs de pago y ciberseguridad/infraestructura.
+      </p>
+
+      <div data-reveal="" style="display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin-top:4px;">
+        <a href="#proyectos" style="display:inline-flex; align-items:center; gap:10px; font-size:15px; font-weight:600; color:#ffffff; padding:14px 26px; border-radius:12px; background:linear-gradient(135deg, var(--accent-deep), var(--accent)); border:1px solid rgba(196,181,253,0.4); box-shadow:0 0 26px rgba(139,92,246,0.35); transition:all .3s ease;" style-hover="box-shadow:0 0 46px rgba(139,92,246,0.7); transform:translateY(-2px);">Ver Proyectos <span style="font-family:'JetBrains Mono',monospace;">→</span></a>
+        <a href="#contacto" style="display:inline-flex; align-items:center; gap:10px; font-size:15px; font-weight:600; color:#e4e4e7; padding:14px 26px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.12); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition:all .3s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff; box-shadow:0 0 25px rgba(6,182,212,0.22);">Contactar</a>
+      </div>
+
+      <div data-reveal="" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,118px), 1fr)); gap:10px; width:100%; max-width:860px; margin-top:26px;">
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; padding:13px 10px; border-radius:12px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.025); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#d4d4d8; transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2); transform:translateY(-3px); color:#ffffff;">Next.js 14</div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; padding:13px 10px; border-radius:12px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.025); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#d4d4d8; transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2); transform:translateY(-3px); color:#ffffff;">React 19</div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; padding:13px 10px; border-radius:12px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.025); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#d4d4d8; transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2); transform:translateY(-3px); color:#ffffff;">Three.js</div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; padding:13px 10px; border-radius:12px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.025); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#d4d4d8; transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2); transform:translateY(-3px); color:#ffffff;">TypeScript</div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; padding:13px 10px; border-radius:12px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.025); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#d4d4d8; transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2); transform:translateY(-3px); color:#ffffff;">Node.js</div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; padding:13px 10px; border-radius:12px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.025); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#d4d4d8; transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2); transform:translateY(-3px); color:#ffffff;">Redis</div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; padding:13px 10px; border-radius:12px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.025); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#d4d4d8; transition:all .3s ease;" style-hover="border-color:rgba(6,182,212,0.5); box-shadow:0 0 25px rgba(6,182,212,0.2); transform:translateY(-3px); color:#ffffff;">ISO 27001</div>
+      </div>
+    </section>
+
+    <section id="sobre-mi" data-reveal="" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,260px), 1fr)); gap:clamp(20px,3vw,40px); align-items:start; padding:clamp(40px,7vh,80px) 0; border-top:1px solid rgba(255,255,255,0.07);">
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.16em; text-transform:uppercase; color:var(--accent);">01 · Sobre mí</span>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(26px,3.2vw,38px); line-height:1.12; letter-spacing:-0.02em; margin:0; color:#fafafa;">Ingeniero de software y fundador SaaS en Medellín.</h2>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:22px;">
+        <p style="margin:0; font-size:16px; line-height:1.75; color:#a1a1aa; font-weight:300; text-wrap:pretty;">Construyo producto de punta a punta: arquitectura backend con colas asíncronas y bases de datos relacionales, interfaces inmersivas en 3D/WebGL, e integraciones de IA y pagos en producción. Trabajo también en infraestructura y ciberseguridad bajo ISO/IEC 27001:2022.</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,130px), 1fr)); gap:12px;">
+          <div style="padding:16px; border-radius:14px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02);">
+            <div style="font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:700; color:#ffffff;">4</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#71717a; letter-spacing:0.05em; text-transform:uppercase; margin-top:4px;">Proyectos destacados</div>
+          </div>
+          <div style="padding:16px; border-radius:14px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02);">
+            <div style="font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:700; color:#ffffff;">125</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#71717a; letter-spacing:0.05em; text-transform:uppercase; margin-top:4px;">Municipios en 3D</div>
+          </div>
+          <div style="padding:16px; border-radius:14px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02);">
+            <div style="font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:700; color:#ffffff;">8</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#71717a; letter-spacing:0.05em; text-transform:uppercase; margin-top:4px;">Controles ISO aplicados</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="proyectos" style="padding:clamp(40px,7vh,80px) 0;">
+      <div data-reveal="" style="display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:32px;">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.16em; text-transform:uppercase; color:var(--accent);">02 · Proyectos destacados</span>
+          <h2 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(28px,3.6vw,44px); line-height:1.1; letter-spacing:-0.02em; margin:0; color:#fafafa;">Trabajo en producción y en desarrollo</h2>
+        </div>
+        <span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#52525b;">2025 — 2026</span>
+      </div>
+
+      <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:stretch;">
+
+        <article data-reveal="" style="flex:1 1 min(100%, 420px); min-width:0; display:flex; flex-direction:column; gap:22px; padding:clamp(22px,2.4vw,34px); border-radius:22px; border:1px solid rgba(255,255,255,0.1); background:linear-gradient(155deg, rgba(139,92,246,0.09), rgba(9,9,11,0.6) 55%); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2);">
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:#c4b5fd; padding:5px 11px; border-radius:999px; border:1px solid rgba(139,92,246,0.4); background:rgba(139,92,246,0.12);">SaaS con IA / Multitenant</span>
+            <span style="display:inline-flex; align-items:center; gap:7px; font-family:'JetBrains Mono',monospace; font-size:11px; color:#fbbf24; padding:5px 11px; border-radius:999px; border:1px solid rgba(251,191,36,0.3); background:rgba(251,191,36,0.08);"><span style="width:6px; height:6px; border-radius:50%; background:#fbbf24; animation:pulseDot 1.8s ease-in-out infinite;"></span>En desarrollo</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(28px,3.4vw,40px); letter-spacing:-0.02em; margin:0; color:#ffffff;">FlowsFy <span style="color:#52525b; font-weight:400; font-size:0.6em;">2026</span></h3>
+            <p style="margin:0; font-size:15.5px; line-height:1.7; color:#a1a1aa; font-weight:300; max-width:62ch; text-wrap:pretty;">Plataforma SaaS multitenant. Bot de WhatsApp con Anthropic Claude API que gestiona ventas, pedidos e inventario en lenguaje natural. Arquitectura con colas asíncronas BullMQ + Redis, pasarela Wompi y Facturación Electrónica DIAN.</p>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,190px), 1fr)); gap:14px; margin-top:auto;">
+            <div style="display:flex; flex-direction:column; gap:9px; padding:16px; border-radius:16px; border:1px solid rgba(255,255,255,0.08); background:rgba(3,7,18,0.7);">
+              <div style="display:flex; align-items:center; gap:8px; padding-bottom:9px; border-bottom:1px solid rgba(255,255,255,0.07);">
+                <span style="width:22px; height:22px; border-radius:50%; background:linear-gradient(140deg, rgba(139,92,246,0.5), rgba(6,182,212,0.3)); display:inline-block;"></span>
+                <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa;">Cliente · WhatsApp</span>
+              </div>
+              <div style="align-self:flex-start; max-width:88%; padding:8px 11px; border-radius:12px 12px 12px 3px; background:rgba(255,255,255,0.06); font-size:11.5px; line-height:1.45; color:#d4d4d8;">Hola, ¿tienen 12 sillas Nórdicas para hoy?</div>
+              <div style="align-self:flex-end; max-width:90%; padding:8px 11px; border-radius:12px 12px 3px 12px; background:linear-gradient(135deg, rgba(124,58,237,0.85), rgba(139,92,246,0.6)); font-size:11.5px; line-height:1.45; color:#f5f3ff;">Sí. Quedan 14 en bodega. Genero el pedido y te envío el link de pago Wompi.</div>
+              <div style="align-self:flex-start; display:flex; gap:4px; padding:9px 11px; border-radius:12px; background:rgba(255,255,255,0.05);">
+                <span style="width:5px; height:5px; border-radius:50%; background:#a78bfa; animation:pulseDot 1.4s ease-in-out infinite;"></span>
+                <span style="width:5px; height:5px; border-radius:50%; background:#a78bfa; animation:pulseDot 1.4s ease-in-out .2s infinite;"></span>
+                <span style="width:5px; height:5px; border-radius:50%; background:#a78bfa; animation:pulseDot 1.4s ease-in-out .4s infinite;"></span>
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:12px; padding:16px; border-radius:16px; border:1px solid rgba(255,255,255,0.08); background:rgba(3,7,18,0.7);">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:9px; border-bottom:1px solid rgba(255,255,255,0.07);">
+                <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa;">Dashboard · Órdenes</span>
+                <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#22d3ee;">live</span>
+              </div>
+              <div style="display:flex; align-items:flex-end; gap:6px; height:74px;">
+                <span style="flex:1; height:38%; border-radius:4px 4px 2px 2px; background:linear-gradient(180deg, rgba(139,92,246,0.9), rgba(139,92,246,0.25));"></span>
+                <span style="flex:1; height:58%; border-radius:4px 4px 2px 2px; background:linear-gradient(180deg, rgba(139,92,246,0.9), rgba(139,92,246,0.25));"></span>
+                <span style="flex:1; height:46%; border-radius:4px 4px 2px 2px; background:linear-gradient(180deg, rgba(139,92,246,0.9), rgba(139,92,246,0.25));"></span>
+                <span style="flex:1; height:76%; border-radius:4px 4px 2px 2px; background:linear-gradient(180deg, rgba(34,211,238,0.95), rgba(34,211,238,0.2)); box-shadow:0 0 16px rgba(34,211,238,0.35);"></span>
+                <span style="flex:1; height:62%; border-radius:4px 4px 2px 2px; background:linear-gradient(180deg, rgba(139,92,246,0.9), rgba(139,92,246,0.25));"></span>
+                <span style="flex:1; height:88%; border-radius:4px 4px 2px 2px; background:linear-gradient(180deg, rgba(139,92,246,0.9), rgba(139,92,246,0.25));"></span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:7px;">
+                <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#71717a;"><span>queue · bullmq</span><span style="color:#d4d4d8;">3 jobs</span></div>
+                <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#71717a;"><span>DIAN · factura</span><span style="color:#4ade80;">emitida</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:7px; padding-top:6px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Node.js</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Express</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">TypeScript</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Next.js 14</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Tailwind</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">PostgreSQL</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Prisma</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Redis</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">BullMQ</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#c4b5fd; padding:5px 9px; border-radius:7px; border:1px solid rgba(139,92,246,0.3); background:rgba(139,92,246,0.1);">Anthropic Claude API</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Wompi</span>
+          </div>
+        </article>
+
+        <div style="flex:1 1 min(100%, 420px); min-width:0; display:flex; flex-direction:column; gap:16px;">
+
+        <article data-reveal="" style="display:flex; flex-direction:column; gap:18px; padding:clamp(22px,2.2vw,30px); border-radius:22px; border:1px solid rgba(255,255,255,0.1); background:linear-gradient(155deg, rgba(6,182,212,0.08), rgba(9,9,11,0.6) 60%); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2);">
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:#67e8f9; padding:5px 11px; border-radius:999px; border:1px solid rgba(6,182,212,0.4); background:rgba(6,182,212,0.12);">Plataforma Oficial / WebGL &amp; 3D</span>
+            <span style="display:inline-flex; align-items:center; gap:7px; font-family:'JetBrains Mono',monospace; font-size:11px; color:#4ade80; padding:5px 11px; border-radius:999px; border:1px solid rgba(74,222,128,0.3); background:rgba(74,222,128,0.08);"><span style="width:6px; height:6px; border-radius:50%; background:#4ade80;"></span>En producción</span>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,240px), 1fr)); gap:20px; align-items:center;">
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(22px,2.4vw,30px); letter-spacing:-0.02em; margin:0; color:#ffffff; line-height:1.15;">Fondas de Mi Pueblo Antioqueño <span style="color:#52525b; font-weight:400; font-size:0.65em;">2026</span></h3>
+              <a href="https://fondasdemipuebloantioqueno.com.co" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#67e8f9; display:inline-flex; align-items:center; gap:6px; align-self:flex-start; transition:all .25s ease;" style-hover="text-shadow:0 0 14px rgba(6,182,212,0.8);">fondasdemipuebloantioqueno.com.co ↗</a>
+              <p style="margin:0; font-size:15px; line-height:1.7; color:#a1a1aa; font-weight:300; text-wrap:pretty;">Desarrollo frontend SPA completo. Mapa 3D interactivo de Antioquia con D3-geo y Three.js, scroll inmersivo suavizado con GSAP (ScrollTrigger &amp; ScrollSmoother), arquitectura bilingüe (ES/EN) con LanguageContext y SEO técnico avanzado.</p>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:10px;">
+              <div style="min-width:0; padding:14px 12px; border-radius:14px; border:1px solid rgba(255,255,255,0.08); background:rgba(3,7,18,0.6);">
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:clamp(19px,2vw,25px); font-weight:700; color:#ffffff;">+60.000</div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#71717a; margin-top:5px; line-height:1.4;">Asistentes proyectados · Feria de las Flores</div>
+              </div>
+              <div style="min-width:0; padding:14px 12px; border-radius:14px; border:1px solid rgba(255,255,255,0.08); background:rgba(3,7,18,0.6);">
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:clamp(19px,2vw,25px); font-weight:700; color:#ffffff;">125</div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#71717a; margin-top:5px; line-height:1.4;">Municipios renderizados en 3D</div>
+              </div>
+              <div style="min-width:0; padding:14px 12px; border-radius:14px; border:1px solid rgba(255,255,255,0.08); background:rgba(3,7,18,0.6);">
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:clamp(19px,2vw,25px); font-weight:700; color:#ffffff;">18+</div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#71717a; margin-top:5px; line-height:1.4;">Rutas i18n</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:7px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">React 19</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Vite 8</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Three.js</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">D3-geo</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">GSAP 3</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">React Router 7</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Vercel</span>
+          </div>
+        </article>
+
+        <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:stretch;">
+
+        <article data-reveal="" style="flex:1 1 min(100%, 230px); min-width:0; display:flex; flex-direction:column; gap:16px; padding:clamp(20px,2vw,26px); border-radius:22px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.022); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2);">
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:#d4d4d8; padding:5px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05);">Sitio Comercial</span>
+            <span style="display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#4ade80;"><span style="width:6px; height:6px; border-radius:50%; background:#4ade80;"></span>En producción</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(20px,2vw,26px); letter-spacing:-0.02em; margin:0; color:#ffffff;">ViveStone <span style="color:#52525b; font-weight:400; font-size:0.62em;">2025</span></h3>
+            <a href="https://www.vivestonesas.com" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#c4b5fd; align-self:flex-start; transition:all .25s ease;" style-hover="text-shadow:0 0 14px rgba(139,92,246,0.8);">vivestonesas.com ↗</a>
+            <p style="margin:0; font-size:14.5px; line-height:1.65; color:#a1a1aa; font-weight:300; text-wrap:pretty;">Plataforma corporativa premium para distribuidora de cuarzos y sinterizados en Medellín/Colombia. Catálogo interactivo filtrable, galería de proyectos, API REST propia y persistencia de datos/cotizaciones.</p>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:7px; margin-top:auto;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Next.js</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">React</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">TypeScript</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Tailwind CSS</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">API Routes</span>
+          </div>
+        </article>
+
+        <article id="ciberseguridad" data-reveal="" style="flex:1 1 min(100%, 230px); min-width:0; display:flex; flex-direction:column; gap:16px; padding:clamp(20px,2vw,26px); border-radius:22px; border:1px solid rgba(255,255,255,0.1); background:linear-gradient(160deg, rgba(6,182,212,0.07), rgba(9,9,11,0.5) 60%); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2);">
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:#67e8f9; padding:5px 10px; border-radius:999px; border:1px solid rgba(6,182,212,0.35); background:rgba(6,182,212,0.1);">Infraestructura &amp; Ciberseguridad</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#71717a;">2026</span>
+          </div>
+          <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(18px,1.8vw,23px); letter-spacing:-0.015em; margin:0; color:#ffffff; line-height:1.25;">Asesorías Jurídicas Integrales S.A.S — Red LAN &amp; ISO/IEC 27001:2022</h3>
+          <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px;">
+            <div style="min-width:0; padding:11px 9px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); background:rgba(3,7,18,0.6);">
+              <div style="font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:700; color:#ffffff;">8</div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:9.5px; color:#71717a; margin-top:4px; line-height:1.35;">Nodos LAN privados</div>
+            </div>
+            <div style="min-width:0; padding:11px 9px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); background:rgba(3,7,18,0.6);">
+              <div style="font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:700; color:#ffffff;">8</div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:9.5px; color:#71717a; margin-top:4px; line-height:1.35;">Controles ISO aplicados</div>
+            </div>
+            <div style="min-width:0; padding:11px 9px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); background:rgba(3,7,18,0.6);">
+              <div style="font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:700; color:#ffffff;">100%</div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:9.5px; color:#71717a; margin-top:4px; line-height:1.35;">Cifrado BitLocker + SMB</div>
+            </div>
+          </div>
+          <p style="margin:0; font-size:14.5px; line-height:1.65; color:#a1a1aa; font-weight:300; text-wrap:pretty;">Diseño e implementación de red LAN privada cerrada (TCP/IPv4 fijo, monitoreo Veyon). Hardening de sistemas, cifrado BitLocker/SMB, bloqueo de USB via GPO, y documentación técnica oficial de cumplimiento (ISO-INV-001, ISO-CON-003, ISO-MED-002, ISO-REG-005).</p>
+          <div style="display:flex; flex-wrap:wrap; gap:7px; margin-top:auto;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">ISO/IEC 27001:2022</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">BitLocker</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">SMB Cifrado</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">GPO</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Veyon</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#a1a1aa; padding:5px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">Networking TCP/IP</span>
+          </div>
+        </article>
+
+        </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="habilidades" style="padding:clamp(40px,7vh,80px) 0; border-top:1px solid rgba(255,255,255,0.07);">
+      <div data-reveal="" style="display:flex; flex-direction:column; gap:12px; margin-bottom:32px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.16em; text-transform:uppercase; color:var(--accent);">03 · Habilidades y tecnologías</span>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(28px,3.6vw,44px); line-height:1.1; letter-spacing:-0.02em; margin:0; color:#fafafa;">Stack completo, de la infraestructura al pixel</h2>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,250px), 1fr)); gap:16px;">
+
+        <div data-reveal="" style="display:flex; flex-direction:column; gap:16px; padding:24px; border-radius:20px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.022); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:8px; height:8px; border-radius:2px; background:var(--accent); box-shadow:0 0 12px rgba(139,92,246,0.9);"></span>
+            <h3 style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin:0; color:#fafafa;">Backend &amp; Cloud</h3>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:7px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">Node.js</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">Express</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">TypeScript</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">Java</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">Spring Boot</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">Prisma ORM</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">BullMQ</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">Redis</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">PostgreSQL</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">Railway</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">Docker</span>
+          </div>
+        </div>
+
+        <div data-reveal="" style="display:flex; flex-direction:column; gap:16px; padding:24px; border-radius:20px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.022); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:8px; height:8px; border-radius:2px; background:var(--cyan); box-shadow:0 0 12px rgba(6,182,212,0.9);"></span>
+            <h3 style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin:0; color:#fafafa;">Frontend &amp; 3D</h3>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:7px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">React 19</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">Next.js 14</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">Tailwind CSS</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">Three.js</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">D3-geo</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">GSAP</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">Framer Motion</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">shadcn/ui</span>
+          </div>
+        </div>
+
+        <div data-reveal="" style="display:flex; flex-direction:column; gap:16px; padding:24px; border-radius:20px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.022); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:8px; height:8px; border-radius:2px; background:#a78bfa; box-shadow:0 0 12px rgba(167,139,250,0.9);"></span>
+            <h3 style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin:0; color:#fafafa;">IA &amp; Integraciones</h3>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:7px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">Anthropic Claude API</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">Meta WhatsApp Cloud API</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">Wompi</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">Resend</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(139,92,246,0.5); color:#ffffff;">REST APIs</span>
+          </div>
+        </div>
+
+        <div data-reveal="" style="display:flex; flex-direction:column; gap:16px; padding:24px; border-radius:20px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.022); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:8px; height:8px; border-radius:2px; background:#22d3ee; box-shadow:0 0 12px rgba(34,211,238,0.9);"></span>
+            <h3 style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin:0; color:#fafafa;">Ciberseguridad &amp; Herramientas</h3>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:7px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">ISO/IEC 27001:2022</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">BitLocker</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">Hardening GPO</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">Git/GitHub</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">Cursor</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">Power BI</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#d4d4d8; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); transition:all .25s ease;" style-hover="border-color:rgba(6,182,212,0.5); color:#ffffff;">Postman</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="contacto" data-reveal="" style="padding:clamp(40px,7vh,80px) 0;">
+      <div style="position:relative; border-radius:26px; border:1px solid rgba(139,92,246,0.28); background:linear-gradient(150deg, rgba(124,58,237,0.14), rgba(3,7,18,0.85) 55%); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); box-shadow:0 0 60px rgba(139,92,246,0.18); overflow:hidden;">
+        <div style="display:flex; align-items:center; gap:8px; padding:12px 18px; border-bottom:1px solid rgba(255,255,255,0.08); background:rgba(0,0,0,0.35);">
+          <span style="width:10px; height:10px; border-radius:50%; background:#ef4444; opacity:.8;"></span>
+          <span style="width:10px; height:10px; border-radius:50%; background:#fbbf24; opacity:.8;"></span>
+          <span style="width:10px; height:10px; border-radius:50%; background:#4ade80; opacity:.8;"></span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#71717a; margin-left:10px;">~/contacto — emmanuel@medellin</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,280px), 1fr)); gap:clamp(24px,3vw,44px); padding:clamp(24px,3.4vw,44px);">
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#4ade80;">$ whoami<span style="display:inline-block; width:8px; height:14px; background:#4ade80; margin-left:6px; vertical-align:-2px; animation:caret 1.1s step-end infinite;"></span></div>
+            <h2 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(26px,3.4vw,40px); line-height:1.1; letter-spacing:-0.025em; margin:0; color:#ffffff;">Hablemos de tu próximo producto</h2>
+            <p style="margin:0; font-size:15.5px; line-height:1.7; color:#a1a1aa; font-weight:300; max-width:46ch; text-wrap:pretty;">Disponible para roles remotos y desarrollo de software de alto impacto. Respondo en menos de 24 horas.</p>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <a href="mailto:emmanuelville@hotmail.com" style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:16px 18px; border-radius:14px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.03); color:#e4e4e7; transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2); transform:translateX(3px); color:#ffffff;">
+              <span style="display:flex; flex-direction:column; gap:3px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:#71717a;">Email</span><span style="font-size:14.5px;">emmanuelville@hotmail.com</span></span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#a78bfa;">→</span>
+            </a>
+            <a href="https://www.linkedin.com/in/villegas-emmanuel31/" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:16px 18px; border-radius:14px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.03); color:#e4e4e7; transition:all .3s ease;" style-hover="border-color:rgba(139,92,246,0.5); box-shadow:0 0 25px rgba(139,92,246,0.2); transform:translateX(3px); color:#ffffff;">
+              <span style="display:flex; flex-direction:column; gap:3px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:#71717a;">LinkedIn</span><span style="font-size:14.5px;">villegas-emmanuel31</span></span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#a78bfa;">↗</span>
+            </a>
+            <a href="https://github.com/SoyKzeta" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:16px 18px; border-radius:14px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.03); color:#e4e4e7; transition:all .3s ease;" style-hover="border-color:rgba(6,182,212,0.5); box-shadow:0 0 25px rgba(6,182,212,0.2); transform:translateX(3px); color:#ffffff;">
+              <span style="display:flex; flex-direction:column; gap:3px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:#71717a;">GitHub</span><span style="font-size:14.5px;">SoyKzeta</span></span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#67e8f9;">↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:14px; padding:28px 0 40px; border-top:1px solid rgba(255,255,255,0.07);">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#52525b;">© 2026 Emmanuel Villegas Urrea · Medellín, Colombia.</span>
+      <div style="display:flex; align-items:center; gap:18px;">
+        <a href="https://github.com/SoyKzeta" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#71717a; transition:color .25s ease;" style-hover="color:#c4b5fd;">GitHub</a>
+        <a href="https://www.linkedin.com/in/villegas-emmanuel31/" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#71717a; transition:color .25s ease;" style-hover="color:#c4b5fd;">LinkedIn</a>
+        <a href="#top" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#71717a; transition:color .25s ease;" style-hover="color:#c4b5fd;">Volver arriba ↑</a>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#8b5cf6&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#8b5cf6&quot;,&quot;#06b6d4&quot;,&quot;#e11d48&quot;,&quot;#22c55e&quot;],&quot;section&quot;:&quot;Tema&quot;},&quot;showGrid&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Tema&quot;},&quot;revealOnScroll&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Animación&quot;}}">
+class Component extends DCLogic {
+  componentDidMount() { this.applyTheme(); this.setupReveal(); this.setupI18n(); }
+  componentDidUpdate() { this.applyTheme(); }
+  componentWillUnmount() { if (this.io) this.io.disconnect(); }
+
+  applyTheme() {
+    const r = document.documentElement.style;
+    const accent = this.props.accent || '#8b5cf6';
+    r.setProperty('--accent', accent);
+    r.setProperty('--accent-deep', this.shade(accent, -0.18));
+    const grid = document.getElementById('gridLayer');
+    if (grid) grid.style.opacity = (this.props.showGrid ?? true) ? '1' : '0';
+  }
+
+  shade(hex, amt) {
+    const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!m) return hex;
+    const c = [1, 2, 3].map(i => {
+      let v = parseInt(m[i], 16) + Math.round(255 * amt);
+      return Math.max(0, Math.min(255, v)).toString(16).padStart(2, '0');
+    });
+    return '#' + c.join('');
+  }
+
+  setupReveal() {
+    if (this.props.revealOnScroll === false) return;
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
+    if (!els.length || !('IntersectionObserver' in window)) return;
+    els.forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(22px)';
+      el.style.transition = 'opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1)';
+    });
+    this.io = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'none'; }, i * 70);
+        this.io.unobserve(el);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    els.forEach(el => this.io.observe(el));
+  }
+
+  setupI18n() {
+    // Diccionario español -> inglés (clave = texto exacto renderizado en ES)
+    const dict = {
+      // Navegación / CTA
+      'Sobre mí': 'About',
+      'Proyectos': 'Projects',
+      'Ciberseguridad': 'Cybersecurity',
+      'Habilidades': 'Skills',
+      'Contacto': 'Contact',
+      'Descargar CV': 'Download CV',
+      // Hero
+      'Disponible para roles remotos y desarrollo de software de alto impacto': 'Available for remote roles & high-impact software development',
+      'Ingeniero Full-Stack & Fundador de SaaS': 'Full-Stack Engineer & SaaS Founder',
+      'Especialista en arquitectura de software escalable, interfaces 3D/WebGL inmersivas, integraciones de IA (Anthropic Claude), APIs de pago y ciberseguridad/infraestructura.': 'Specialist in scalable software architecture, immersive 3D/WebGL interfaces, AI integrations (Anthropic Claude), payment APIs, and cybersecurity/infrastructure.',
+      'Ver Proyectos': 'View Projects',
+      'Contactar': 'Get in touch',
+      // Sobre mí
+      '01 · Sobre mí': '01 · About',
+      'Ingeniero de software y fundador SaaS en Medellín.': 'Software engineer and SaaS founder in Medellín.',
+      'Construyo producto de punta a punta: arquitectura backend con colas asíncronas y bases de datos relacionales, interfaces inmersivas en 3D/WebGL, e integraciones de IA y pagos en producción. Trabajo también en infraestructura y ciberseguridad bajo ISO/IEC 27001:2022.': 'I build products end to end: backend architecture with async queues and relational databases, immersive 3D/WebGL interfaces, and AI and payment integrations in production. I also work on infrastructure and cybersecurity under ISO/IEC 27001:2022.',
+      'Proyectos destacados': 'Featured projects',
+      'Municipios en 3D': 'Municipalities in 3D',
+      'Controles ISO aplicados': 'ISO controls applied',
+      // Proyectos
+      '02 · Proyectos destacados': '02 · Featured projects',
+      'Trabajo en producción y en desarrollo': 'Work in production and in progress',
+      'SaaS con IA / Multitenant': 'AI SaaS / Multitenant',
+      'En desarrollo': 'In progress',
+      'En producción': 'In production',
+      'Plataforma SaaS multitenant. Bot de WhatsApp con Anthropic Claude API que gestiona ventas, pedidos e inventario en lenguaje natural. Arquitectura con colas asíncronas BullMQ + Redis, pasarela Wompi y Facturación Electrónica DIAN.': 'Multitenant SaaS platform. WhatsApp bot powered by the Anthropic Claude API that handles sales, orders, and inventory in natural language. Architecture with BullMQ + Redis async queues, the Wompi payment gateway, and DIAN electronic invoicing.',
+      'Cliente · WhatsApp': 'Client · WhatsApp',
+      'Hola, ¿tienen 12 sillas Nórdicas para hoy?': 'Hi, do you have 12 Nordic chairs for today?',
+      'Sí. Quedan 14 en bodega. Genero el pedido y te envío el link de pago Wompi.': 'Yes. 14 left in stock. I’ll create the order and send you the Wompi payment link.',
+      'Dashboard · Órdenes': 'Dashboard · Orders',
+      'DIAN · factura': 'DIAN · invoice',
+      'emitida': 'issued',
+      'Plataforma Oficial / WebGL & 3D': 'Official Platform / WebGL & 3D',
+      'Desarrollo frontend SPA completo. Mapa 3D interactivo de Antioquia con D3-geo y Three.js, scroll inmersivo suavizado con GSAP (ScrollTrigger & ScrollSmoother), arquitectura bilingüe (ES/EN) con LanguageContext y SEO técnico avanzado.': 'Complete SPA frontend build. Interactive 3D map of Antioquia with D3-geo and Three.js, smooth immersive scrolling with GSAP (ScrollTrigger & ScrollSmoother), bilingual architecture (ES/EN) with LanguageContext, and advanced technical SEO.',
+      'Asistentes proyectados · Feria de las Flores': 'Projected attendees · Feria de las Flores',
+      'Municipios renderizados en 3D': 'Municipalities rendered in 3D',
+      'Rutas i18n': 'i18n routes',
+      'Sitio Comercial': 'Commercial Site',
+      'Plataforma corporativa premium para distribuidora de cuarzos y sinterizados en Medellín/Colombia. Catálogo interactivo filtrable, galería de proyectos, API REST propia y persistencia de datos/cotizaciones.': 'Premium corporate platform for a quartz and sintered-stone distributor in Medellín/Colombia. Filterable interactive catalog, project gallery, custom REST API, and data/quote persistence.',
+      'Infraestructura & Ciberseguridad': 'Infrastructure & Cybersecurity',
+      'Asesorías Jurídicas Integrales S.A.S — Red LAN & ISO/IEC 27001:2022': 'Asesorías Jurídicas Integrales S.A.S — LAN Network & ISO/IEC 27001:2022',
+      'Nodos LAN privados': 'Private LAN nodes',
+      'Cifrado BitLocker + SMB': 'BitLocker + SMB encryption',
+      'Diseño e implementación de red LAN privada cerrada (TCP/IPv4 fijo, monitoreo Veyon). Hardening de sistemas, cifrado BitLocker/SMB, bloqueo de USB via GPO, y documentación técnica oficial de cumplimiento (ISO-INV-001, ISO-CON-003, ISO-MED-002, ISO-REG-005).': 'Design and rollout of a closed private LAN network (fixed TCP/IPv4, Veyon monitoring). System hardening, BitLocker/SMB encryption, USB blocking via GPO, and official technical compliance documentation (ISO-INV-001, ISO-CON-003, ISO-MED-002, ISO-REG-005).',
+      // Habilidades
+      '03 · Habilidades y tecnologías': '03 · Skills & technologies',
+      'Stack completo, de la infraestructura al pixel': 'Full stack, from infrastructure to pixel',
+      'IA & Integraciones': 'AI & Integrations',
+      'Ciberseguridad & Herramientas': 'Cybersecurity & Tools',
+      // Contacto
+      '~/contacto — emmanuel@medellin': '~/contact — emmanuel@medellin',
+      'Hablemos de tu próximo producto': 'Let’s talk about your next product',
+      'Disponible para roles remotos y desarrollo de software de alto impacto. Respondo en menos de 24 horas.': 'Available for remote roles and high-impact software development. I reply within 24 hours.',
+      // Footer
+      'Volver arriba ↑': 'Back to top ↑'
+    };
+
+    // Recolecta los nodos de texto traducibles una sola vez.
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+    const entries = [];
+    let node;
+    while ((node = walker.nextNode())) {
+      const raw = node.nodeValue;
+      const key = raw.trim();
+      if (!key || !dict[key]) continue;
+      const pre = raw.slice(0, raw.length - raw.replace(/^\s+/, '').length);
+      const post = raw.slice(raw.replace(/\s+$/, '').length);
+      entries.push({ node, es: raw, en: pre + dict[key] + post });
+    }
+
+    const btns = () => Array.from(document.querySelectorAll('#langToggle [data-lang]'));
+    const apply = (lang) => {
+      entries.forEach(e => { e.node.nodeValue = lang === 'en' ? e.en : e.es; });
+      document.documentElement.lang = lang;
+      btns().forEach(b => {
+        const active = b.getAttribute('data-lang') === lang;
+        b.style.background = active ? 'linear-gradient(135deg, var(--accent-deep), var(--accent))' : 'transparent';
+        b.style.color = active ? '#f5f3ff' : '#a1a1aa';
+      });
+      try { localStorage.setItem('portfolioLang', lang); } catch (e) {}
+    };
+
+    const main = document.getElementById('top') || document.body;
+    const switchTo = (lang) => {
+      if (lang === (document.documentElement.lang || 'es')) return;
+      main.style.transition = 'opacity .26s ease, filter .26s ease';
+      main.style.opacity = '0.3';
+      main.style.filter = 'blur(3px)';
+      setTimeout(() => {
+        apply(lang);
+        main.style.opacity = '1';
+        main.style.filter = 'none';
+      }, 170);
+    };
+
+    // Delegación de eventos: sobrevive a cualquier re-render.
+    document.addEventListener('click', (ev) => {
+      const b = ev.target.closest ? ev.target.closest('#langToggle [data-lang]') : null;
+      if (b) switchTo(b.getAttribute('data-lang'));
+    });
+
+    let initial = 'es';
+    try { const s = localStorage.getItem('portfolioLang'); if (s === 'en' || s === 'es') initial = s; } catch (e) {}
+    apply(initial);
+  }
+
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
